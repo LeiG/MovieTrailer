@@ -13,8 +13,8 @@ class Movie(object):
 
     def __init__(self, movie_title, trailer_youtube):
         self.title = movie_title
-        self.omdb_info = self._get_omdb_info(movie_title)
-        self.storyline, self.poster_image_url = self._parse_omdb_info()
+        self.storyline, self.poster_image_url =\
+            self._parse_omdb_info(movie_title)
         self.trailer_youtube_url = trailer_youtube
 
     def show_trailer(self):
@@ -22,10 +22,13 @@ class Movie(object):
 
     def _get_omdb_info(self, movie_title):
         omdb_info_json = urlopen(Movie.OMDB_URL % movie_title)
+
         return json.load(omdb_info_json)
 
-    def _parse_omdb_info(self):
-        return self.omdb_info.get("Plot"), self.omdb_info.get("Poster")
+    def _parse_omdb_info(self, movie_title):
+        omdb_info = self._get_omdb_info(movie_title)
+
+        return omdb_info.get("Plot"), omdb_info.get("Poster")
 
     def __str__(self):
         return "Movie %s" % (self.title)
